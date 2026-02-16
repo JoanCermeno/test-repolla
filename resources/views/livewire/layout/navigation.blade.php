@@ -33,6 +33,15 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('loteria')" :active="request()->routeIs('loteria')" wire:navigate>
+                        Lotería
+                    </x-nav-link>
+                    <x-nav-link :href="route('tablero')" :active="request()->routeIs('tablero')" wire:navigate>
+                        Tablero
+                    </x-nav-link>
+                    <x-nav-link :href="route('mis-reservas')" :active="request()->routeIs('mis-reservas')" wire:navigate>
+                        Mis Reservas
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -83,6 +92,15 @@ new class extends Component
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('loteria')" :active="request()->routeIs('loteria')" wire:navigate>
+                Lotería
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('tablero')" :active="request()->routeIs('tablero')" wire:navigate>
+                Tablero
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('mis-reservas')" :active="request()->routeIs('mis-reservas')" wire:navigate>
+                Mis Reservas
             </x-responsive-nav-link>
         </div>
 
