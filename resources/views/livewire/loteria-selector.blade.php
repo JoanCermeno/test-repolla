@@ -8,10 +8,6 @@ new class extends Component
 {
     public array $carrito = [];
 
-    public string $nombre_cliente = '';
-
-    public string $telefono_cliente = '';
-
     public ?string $mensajeError = null;
 
     public string $mensajeExito = '';
@@ -58,32 +54,24 @@ new class extends Component
 
     public function confirmarReserva(): void
     {
-        $this->validate([
-            'nombre_cliente' => 'required|string|min:2',
-            'telefono_cliente' => 'required|string|min:6',
-        ], [
-            'nombre_cliente.required' => 'El nombre es obligatorio.',
-            'telefono_cliente.required' => 'El teléfono es obligatorio.',
-        ]);
-
         if (empty($this->carrito)) {
             $this->mensajeError = 'Agrega al menos un número al carrito.';
             return;
         }
+
+        $nombreCliente = auth()->user()->name;
 
         foreach ($this->carrito as $item) {
             Reserva::create([
                 'user_id' => auth()->id(),
                 'numero' => $item['numero'],
                 'nivel' => $item['nivel'],
-                'nombre_cliente' => $this->nombre_cliente,
-                'telefono_cliente' => $this->telefono_cliente,
+                'nombre_cliente' => $nombreCliente,
+                'telefono_cliente' => null,
             ]);
         }
 
         $this->carrito = [];
-        $this->nombre_cliente = '';
-        $this->telefono_cliente = '';
         $this->mensajeError = null;
         $this->mensajeExito = '¡Reserva confirmada correctamente!';
     }
@@ -356,42 +344,18 @@ new class extends Component
                         <p class="text-gray-500 text-sm">Vacío. Haz clic en un número disponible.</p>
                     @endforelse
                 </div>
-                <form wire:submit="confirmarReserva" class="space-y-3">
-                    <div>
-                        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                        <input
-                            type="text"
-                            id="nombre"
-                            wire:model="nombre_cliente"
-                            class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="Tu nombre"
-                        />
-                        @error('nombre_cliente')
-                            <span class="text-red-600 text-xs">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div>
-                        <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
-                        <input
-                            type="text"
-                            id="telefono"
-                            wire:model="telefono_cliente"
-                            class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="Tu teléfono"
-                        />
-                        @error('telefono_cliente')
-                            <span class="text-red-600 text-xs">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <button
-                        type="submit"
-                        wire:loading.attr="disabled"
-                        class="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
-                    >
-                        <span wire:loading.remove>Confirmar Reserva</span>
-                        <span wire:loading>Guardando...</span>
-                    </button>
-                </form>
+                @if (count($carrito) > 0)
+                    <form wire:submit="confirmarReserva">
+                        <button
+                            type="submit"
+                            wire:loading.attr="disabled"
+                            class="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50 font-medium"
+                        >
+                            <span wire:loading.remove>Confirmar Reserva</span>
+                            <span wire:loading>Guardando...</span>
+                        </button>
+                    </form>
+                @endif
             </div>
         </aside>
     </div>
